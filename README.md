@@ -19,7 +19,7 @@ Mowing modelling in Alpine's area from remote sensing images by machine learning
 
 ![S1 criteria selection](https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/S1select.png)
 
-3. Select the product you need by the checking boxes in the list below the map and click on ![ADD TO PROCESSING CENTER](https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/addtoprocenter.png)
+3. Select the product you need by the checking boxes in the list below the map and click on <img src="https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/addtoprocenter.png" alt="drawing" height="27"/>
 
 ![S1 list selection](https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/S1list.png)
 
@@ -28,7 +28,7 @@ Mowing modelling in Alpine's area from remote sensing images by machine learning
 
 ![S2 criteria selection](https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/S2select.png)
 
-3. Select the product you need by the checking boxes in the list below the map and click on add to processing center
+3. Select the product you need by the checking boxes in the list below the map and click on <img src="https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/addtoprocenter.png" alt="drawing" height="27"/>
 
 ![S2 list selection](https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/S2list.png)
 
