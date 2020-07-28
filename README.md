@@ -14,7 +14,6 @@ Mowing modelling in Alpine's area from remote sensing images by machine learning
 
 ## Criteria selection
 1. Go on the [PEPS Explore tab](https://peps.cnes.fr/rocket/#/search?maxRecords=50)
-
 ### SENTINEL-1
 2. *SENTINEL-1* Select the region of interest by drawing on the map, then select the criteria in the item list on the left (example below for Écrin National Park region of interest on year 2018-2019)
 
@@ -34,19 +33,14 @@ Mowing modelling in Alpine's area from remote sensing images by machine learning
 ![S2 list selection](https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/S2list.png)
 
 ### Preprocessing
-
 4. Go to the processing center by clicking on the gears ![PEPS gears](https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/pepsgears.png) on the top right of the page
-
 5. Select the processing you need (S1Tiling for S1 - MAJA for S2)
-
 6. Select the products you want to process
-
 7. Launch the processing by clicking on `PROCESS PRODUCTS` 
 
 ### Downloading
 
 8. The process state can be checked in `MY JOBS`
-
 9. When the process is done, go to `MY RESULTS` and download the products
 
 # Folder architecture
