@@ -15,16 +15,16 @@ Mowing modelling in Alpine's area from remote sensing images by machine learning
 ## Criteria selection
 1. Go on the [PEPS Explore tab](https://peps.cnes.fr/rocket/#/search?maxRecords=50)
 ### SENTINEL-1
-2. *SENTINEL-1* Select the region of interest by drawing on the map, then select the criteria in the item list on the left (example below for Écrin National Park region of interest on year 2018-2019)
+2. Select the region of interest by drawing on the map, then select the criteria in the item list on the left (example below for Écrin National Park region of interest on year 2018-2019)
 
 ![S1 criteria selection](https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/S1select.png)
 
-3. Select the product you need by the checking boxes in the list below the map and click on `ADD TO PROCESSING CENTER` 
+3. Select the product you need by the checking boxes in the list below the map and click on ![ADD TO PROCESSING CENTER](https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/addtoprocenter.png)
 
 ![S1 list selection](https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/S1list.png)
 
 ### SENTINEL-2
-2. *SENTINEL-2* Select the region of interest by tile in the item list on the left, then select the criteria in the item list on the left (example below for tile 31TGK on year 2018-2019)
+2. Select the region of interest by tile in the item list on the left, then select the criteria in the item list on the left (example below for tile 31TGK on year 2018-2019)
 
 ![S2 criteria selection](https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/S2select.png)
 
