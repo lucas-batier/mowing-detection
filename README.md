@@ -2,6 +2,8 @@
 Mowing modelling in Alpine's area from remote sensing images by machine learning algorithm
 
 # Process
+The following process specify how to collect data, treat them and predict mowing from my end of study project at Laboratoire d'écologie Alpines (Grenoble).
+
 1. Download preprocess S1 tiled and S2 corrected images from PEPS
 2. Organize downloaded images in the predefined folder architecture
 3. Compute vegetation indices from S2 images
@@ -10,7 +12,7 @@ Mowing modelling in Alpine's area from remote sensing images by machine learning
 6. Launch the multimodal-temporal mowing predictor model learning
 7. Predict mowing from remote sensing images through the model
 
-# Preprocessed images downloading
+# 1. Preprocessed images downloading
 
 ## Criteria selection
 1. Go on the [PEPS Explore tab](https://peps.cnes.fr/rocket/#/search?maxRecords=50)
@@ -43,9 +45,9 @@ Mowing modelling in Alpine's area from remote sensing images by machine learning
 8. The process state can be checked in `MY JOBS`
 9. When the process is done, go to `MY RESULTS` and download the products
 
-# Folder architecture
+# 2. Folder architecture
 
-Save the downloaded products (images or folder of images) by the following folder architecture
+1. Save the downloaded products (images or folder of images) by the following folder architecture
 
 <pre>
 Parentfolder/Tile/Year/SENTINEL-X/Products
@@ -61,43 +63,47 @@ Parentfolder/Tile/Year/SENTINEL-1/s1*.tiff
 Parentfolder/Tile/Year/SENTINEL-2/SENTINEL2*/
 </pre>
 
-Save 
+2. Move this git directory in the `Parentfolder`
 
-Copy this git directory in the `Parentfolder`
+# 3. Vegetation index
 
-# Vegetation index
-
-To compute the vegetation index images launch the `vegindex.py` script, depending on the number of S2 images it may take a while (1 day for 2 years)
+To compute the vegetation index images launch the `vegindex.py` script, depending on the number of S2 images it may take a while (1 day for 2 years of images)
 
 N.B.: if the folder architecture is correct, everything should work instantly
 
-# Groundtruth
+# 4. Groundtruth
 
 ## Reference data
 
-The aim for our references is to collect class 1 (mowed or grazed) and class 0 (woodlands, grasslands and meadows)
+The aim for our references is to collect class 1 (mowed) and class 0 (not mowed lands)
 
 ### Class 1 (Mowed)
-Delphine DB collected global mowing and grazing area in Écrins National Park.
+Delphine DB collected global mowing area in Écrins National Park.
 
-### Class 0 (not mowed)
-The CNES provide the [OSO](https://www.theia-land.fr/en/ceslist/land-cover-sec/) map who give nice information for class 0. It can be downloaded [here](https://theia.cnes.fr/atdistrib/rocket/#/search?collection=OSO)
+### Class 0 (Not Mowed)
+The CNES provide the [OSO](https://www.theia-land.fr/en/ceslist/land-cover-sec/) map who give nice information (woodlands, grasslands and meadows) for class 0. It can be downloaded [here](https://theia.cnes.fr/atdistrib/rocket/#/search?collection=OSO)
 
 ## Class merging
 
 Groundtruth image is processed by QGIS, downloadable [here](https://qgis.org/en/site/forusers/download.html)
 
-Then, in QGIS:
+Thus, in QGIS:
 1. Add the S2 raster (`DB/S2Tile/S2Tile.tiff`) as a layer (`Layer` - `Add Layer` - `Add Raster Layer`)
+
+***IMAGE***
+
 ### Class 1
 2. Add the Delphine DB raster (`DB/Delphine/Mowing.img`) as a layer (`Layer` - `Add Layer` - `Add Raster Layer`)
-3. Right click on the Delphine DB layer in the bottom left go to `Export - Save As...`
+3. Right click on the Delphine DB layer in the bottom left, go to `Export - Save As...`
+
+***IMAGE***
+
 4. In the popup menu:
-   1. Choose GEOTIFF as file format
-   2. Choose mowing1_qgis.tif as file name
-   3. Choose EPSG:32631 - WGS 84 / UTM zone 31N
-   4. Click on `Calculate from Layer` in the Extent rectangle and choose the S2 layer
-   5. Force the resolution to `10` `10`
+   1. Choose `GEOTIFF` as file format
+   2. Write `mowing1_qgis.tif` as file name
+   3. Choose `EPSG:32631 - WGS 84 / UTM zone 31N` as reference system
+   4. Click on `Calculate from Layer` in the `Extent` rectangle and choose the S2 layer
+   5. Force the resolution to `10`  `10`
    6. Click on `OK`
    7. Move the external file in DB/Mowing/
    
@@ -105,20 +111,23 @@ Then, in QGIS:
 
 ### Class 0
 2. Add the OSO raster (`DB/OSO/OSC_20XX.tif`) as a layer (`Layer` - `Add Layer` - `Add Raster Layer`)
-3. Right click on the Delphine DB layer in the bottom left go to `Export - Save As...`
-4. In the popup menu: do exactly the same as for class 1 but put mowing0_qgis.tif as file name
+3. Right click on the OSO layer in the bottom left, go to `Export - Save As...`
+4. In the popup menu: do exactly the same as for class 1 but write `mowing0_qgis.tif` as file name
 
 ***IMAGE***
 
 ## Parcel filtering
-1. Select only woodlands, grasslands and meadows OSO parcels (**1_MOW_osofilter.py**)
-2. Remove overlayer parcels (**2_MOW_overlayremoval.py**)
-3. Remove too small (< 1 hectare) and too big (> 100 hectare) parcels (**3_MOW_sizeremoval.py**)
-3. Create the final groundtruth vector (**4_MOW_groundtruthvect.py**)
 
-# Dataset
+Launch the `MOW_filtering.py` script and all the following step will be done. They can be done separately but in the right order
 
-The dataset is automatically created (**5_MOW_dataset.py**), nevertheless it can be truly long, almost 1 week for 3 S1 polarization, 10 S2 images and 4 vegetation indices on 2 years
+1. Select only woodlands, grasslands and meadows OSO parcels (`1_MOW_osofilter.py`)
+2. Remove overlayer parcels (`2_MOW_overlayremoval.py`)
+3. Remove too small (< 1 hectare) and too big (> 100 hectare) parcels and crop parcels (`3_MOW_sizeremoval.py`)
+3. Create the final groundtruth vector (`4_MOW_groundtruthvect.py`)
+
+# 5. Dataset
+
+The dataset is automatically created by the `MOW_dataset.py` script. Its creation is truly long (almost 1 week for 3 S1 polarization, 10 S2 images and 4 vegetation indices on 2 years)
 
 
 
