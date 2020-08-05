@@ -5,7 +5,7 @@ from progressbar import update_progress
 import argparse
 
 parser=argparse.ArgumentParser(
-    description='''Filter on class 0 and formalizing class 1''')
+    description='''Create final groundtruth vector''')
 parser.add_argument('-g','--groundtruth', help='Groundtruth image', required=True)
 parser.add_argument('-p','--parcels', help='Parcel image', required=True)
 args=parser.parse_args()
