@@ -103,5 +103,5 @@ for images_directory in args.folders:
     if folder(images_directory):
         update_progress(1)
 
-print('J''ai finiii !')
+print('Everything''s done !')
     
