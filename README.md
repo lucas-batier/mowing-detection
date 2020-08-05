@@ -106,7 +106,7 @@ Thus, open QGIS:
    1. Choose `GEOTIFF` as file format
    2. Write `mowing1.tif` as file name
    3. Choose `EPSG:32631 - WGS 84 / UTM zone 31N` as reference system
-   4. Define the `Extent` coordinates as `5000040N`, `809760E`, `699960W` and `4890240S`
+   4. Define the `Extent` coordinates as `5000040`N, `809760`E, `699960`W and `4890240`S
    5. Force the resolution to `10` x `10`
    6. Click on `OK`
    7. Move the external file in DB/Mowing/
@@ -122,16 +122,26 @@ Thus, open QGIS:
 
 ## Parcel filtering
 
-Launch the `filtering.py` script and all the following step will be done. They can be done separately but in the right order
+Launch the `filtering.py` script and all the following step will be done. They can be done separately but in the right order.
 
-1. Select only woodlands, grasslands and meadows OSO parcels (`1_osofilter.py`)
+*EXAMPLE* to launch all the filtering
+
+<pre>
+python3 filtering.py --class0 path/to/mowing0.tif --class1 path/to/mowing1.tif
+</pre>
+
+1. Select only woody moorlands, grasslands and meadows in OSO images and formalizing class 1 images (`1_osofilter.py`)
 2. Remove overlayer parcels (`2_overlayremoval.py`)
-3. Remove too small (< 1 hectare) and too big (> 100 hectare) parcels and crop parcels (`3_sizeremoval.py`)
+3. Remove too small (< 1 hectare) and too big (> 100 hectare) parcels, crop them and save the final parcels' image (`3_sizeremoval.py`)
 3. Create the final groundtruth vector (`4_groundtruthvect.py`)
+
+## Date grid
+
+***TO BE DONE***
 
 # 5. Dataset
 
-The dataset is automatically created by the `dataset.py` script. Its creation is truly long (almost 1 week for 3 S1 polarization, 10 S2 images and 4 vegetation indices on 2 years)
+The dataset is created by the `dataset.py` script. Its creation is truly long (almost 1 week for 17 modes on 144 images, 2 years with a 5 days frequency)
 
 
 
