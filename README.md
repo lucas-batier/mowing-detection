@@ -38,12 +38,12 @@ The following process specify how to collect data, treat them and predict mowing
 4. Go to the processing center by clicking on the gears ![PEPS gears](https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/pepsgears.png) on the top right of the page
 5. Select the processing you need (S1Tiling for S1 - MAJA for S2)
 6. Select the products you want to process
-7. Launch the processing by clicking on `PROCESS PRODUCTS` 
+7. Launch the processing by clicking on <img src="https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/procprod.png" alt="drawing" height="27"/> 
 
 ### Downloading
 
-8. The process state can be checked in `MY JOBS`
-9. When the process is done, go to `MY RESULTS` and download the products
+8. The process state can be checked in <img src="https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/jobs.png" alt="drawing" height="27"/>
+9. When the process is done, go to <img src="https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/results.png" alt="drawing" height="27"/> and download the products
 
 # 2. Folder architecture
 
@@ -63,13 +63,17 @@ Parentfolder/Tile/Year/SENTINEL-1/s1*.tiff
 Parentfolder/Tile/Year/SENTINEL-2/SENTINEL2*/
 </pre>
 
-2. Move this git directory in the `Parentfolder`
+2. Move the `Scripts/` directory of this Git in the `Parentfolder`
 
 # 3. Vegetation index
 
-To compute the vegetation index images launch the `vegindex.py` script, depending on the number of S2 images it may take a while (1 day for 2 years of images)
+To compute the vegetation index images use the `vegindex.py` script, depending on the number of S2 images it may take a while (1 day for 2 years of images)
 
-N.B.: if the folder architecture is correct, everything should work instantly
+*EXAMPLE* for tile 31TGK on year 2018 and 2019
+
+<pre>
+python3 vegindex.py ../31TGK/2018/SENTINEL-2/* ../31TGK/2019/SENTINEL-2/*
+</pre>
 
 # 4. Groundtruth
 
@@ -81,53 +85,53 @@ The aim for our references is to collect class 1 (mowed) and class 0 (not mowed 
 Delphine DB collected global mowing area in Écrins National Park.
 
 ### Class 0 (Not Mowed)
-The CNES provide the [OSO](https://www.theia-land.fr/en/ceslist/land-cover-sec/) map who give nice information (woodlands, grasslands and meadows) for class 0. It can be downloaded [here](https://theia.cnes.fr/atdistrib/rocket/#/search?collection=OSO)
+The CNES provide the [OSO](https://www.theia-land.fr/en/ceslist/land-cover-sec/) land map who give nice information (woodlands, grasslands and meadows) for class 0. It can be downloaded [here](https://theia.cnes.fr/atdistrib/rocket/#/search?collection=OSO)
 
 ## Class merging
 
 Groundtruth image is processed by QGIS, downloadable [here](https://qgis.org/en/site/forusers/download.html)
 
-Thus, in QGIS:
-1. Add the S2 raster (`DB/S2Tile/S2Tile.tiff`) as a layer (`Layer` - `Add Layer` - `Add Raster Layer`)
-
-***IMAGE***
+Thus, open QGIS:
 
 ### Class 1
-2. Add the Delphine DB raster (`DB/Delphine/Mowing.img`) as a layer (`Layer` - `Add Layer` - `Add Raster Layer`)
-3. Right click on the Delphine DB layer in the bottom left, go to `Export - Save As...`
+1. Add the Delphine DB raster (`DB/Delphine/Mowing.img`) as a layer (`Layer` - `Add Layer` - `Add Raster Layer`)
 
-***IMAGE***
+<img src="https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/addraslayer.png" alt="drawing" width="520"/>
 
-4. In the popup menu:
+2. Right click on the Delphine DB layer in the bottom left, go to `Export - Save As...`
+
+<img src="https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/saveas.png" alt="drawing" width="700"/>
+
+3. In the popup menu:
    1. Choose `GEOTIFF` as file format
-   2. Write `mowing1_qgis.tif` as file name
+   2. Write `mowing1.tif` as file name
    3. Choose `EPSG:32631 - WGS 84 / UTM zone 31N` as reference system
-   4. Click on `Calculate from Layer` in the `Extent` rectangle and choose the S2 layer
-   5. Force the resolution to `10`  `10`
+   4. Define the `Extent` coordinates as `5000040N`, `809760E`, `699960W` and `4890240S`
+   5. Force the resolution to `10` x `10`
    6. Click on `OK`
    7. Move the external file in DB/Mowing/
    
-***IMAGE***
+<img src="https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/exportqgis1.png" alt="drawing" width="700"/>
 
 ### Class 0
-2. Add the OSO raster (`DB/OSO/OSC_20XX.tif`) as a layer (`Layer` - `Add Layer` - `Add Raster Layer`)
-3. Right click on the OSO layer in the bottom left, go to `Export - Save As...`
-4. In the popup menu: do exactly the same as for class 1 but write `mowing0_qgis.tif` as file name
+1. Add the OSO raster (`DB/OSO/OSC_20XX.tif`) as a layer (`Layer` - `Add Layer` - `Add Raster Layer`)
+2. Right click on the OSO layer in the bottom left, go to `Export - Save As...`
+3. In the popup menu: do exactly the same as for class 1 but write `mowing0.tif` as file name
 
-***IMAGE***
+<img src="https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/exportqgis0.png" alt="drawing" width="700"/>
 
 ## Parcel filtering
 
-Launch the `MOW_filtering.py` script and all the following step will be done. They can be done separately but in the right order
+Launch the `filtering.py` script and all the following step will be done. They can be done separately but in the right order
 
-1. Select only woodlands, grasslands and meadows OSO parcels (`1_MOW_osofilter.py`)
-2. Remove overlayer parcels (`2_MOW_overlayremoval.py`)
-3. Remove too small (< 1 hectare) and too big (> 100 hectare) parcels and crop parcels (`3_MOW_sizeremoval.py`)
-3. Create the final groundtruth vector (`4_MOW_groundtruthvect.py`)
+1. Select only woodlands, grasslands and meadows OSO parcels (`1_osofilter.py`)
+2. Remove overlayer parcels (`2_overlayremoval.py`)
+3. Remove too small (< 1 hectare) and too big (> 100 hectare) parcels and crop parcels (`3_sizeremoval.py`)
+3. Create the final groundtruth vector (`4_groundtruthvect.py`)
 
 # 5. Dataset
 
-The dataset is automatically created by the `MOW_dataset.py` script. Its creation is truly long (almost 1 week for 3 S1 polarization, 10 S2 images and 4 vegetation indices on 2 years)
+The dataset is automatically created by the `dataset.py` script. Its creation is truly long (almost 1 week for 3 S1 polarization, 10 S2 images and 4 vegetation indices on 2 years)
 
 
 
