@@ -133,13 +133,13 @@ The parcel filtering is performed in 4 steps which can be done separately **in t
 
 *Input*
 
-- `--class0` path to the unmowed parcel images
-- `--class1` path to the mowed parcel images
+- `--class0` path to the unmowed parcel image
+- `--class1` path to the mowed parcel image
 
-*Output*
+*Output* [All in the script folder]
 
-- `parcels.tif` the image containing parcels localisation and numbers
-- `grt.npy` the groundtruth vector containing parcels labels
+- `parcels.tif` image containing parcels localisation and numbers
+- `grt.npy` groundtruth vector containing parcels labels
 
 *Example*
 
@@ -149,9 +149,19 @@ python3 filtering.py --class0 path/to/mowing0.tif --class1 path/to/mowing1.tif
 
 ## Date grid
 
-To create the dategrid, launch the `dategrid.py` script. It is created by searching for a SENTINEL-1 - SENTINEL-2 correspondancy (according to their high revisit frequency, SENTINEL-1 images are selected by nearest-neighbours approximation)
+The dategrid is created by searching for a SENTINEL-1 - SENTINEL-2 correspondancy (according to their high revisit frequency, SENTINEL-1 images are selected by nearest-neighbours approximation)
 
-*EXAMPLE* to process all images (tiles, years) containing in the parentfolder
+`dategrid.py` script:
+
+*Input*
+
+- `--folder` path to the parentfolder containing *tile/year/SENTINEL-X/**
+
+*Output* [All in the script folder]
+
+- `dategrid.csv` dategrid correspondancy between SENTINEL-1 and SENTINEL-2
+
+*Example*
 
 <pre>
 python3 dategrid.py --folder path/to/parentfolder
@@ -159,7 +169,23 @@ python3 dategrid.py --folder path/to/parentfolder
 
 # 5. Dataset
 
-The dataset is created by the `dataset.py` script. Its creation is truly long (almost 1 week for 17 modes on 144 images, 2 years with a 5 days frequency)
+The dataset creation is truly long (almost 1 week for 17 modes on 144 images, 2 years with a 5 days frequency)
+
+`dataset.py` script:
+
+*Input*
+
+- `--` 
+
+*Output* [All in the script folder]
+
+- ``
+
+*Example*
+
+<pre>
+python3 dataset.py -- 
+</pre>
 
 
 
