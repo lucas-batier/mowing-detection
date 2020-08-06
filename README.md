@@ -50,17 +50,17 @@ The following process specify how to collect data, treat them and predict mowing
 1. Save the downloaded products (images or folder of images) by the following folder architecture
 
 <pre>
-Parentfolder/Tile/Year/SENTINEL-X/Products
+parentfolder/tile/year/SENTINEL-X/products
 </pre>
 
 *SENTINEL-1*
 <pre>
-Parentfolder/Tile/Year/SENTINEL-1/s1*.tiff
+parentfolder/tile/year/SENTINEL-1/s1*.tiff
 </pre>
 
 *SENTINEL-2*
 <pre>
-Parentfolder/Tile/Year/SENTINEL-2/SENTINEL2*/
+parentfolder/tile/year/SENTINEL-2/SENTINEL2*/
 </pre>
 
 2. Move the `Scripts/` directory of this Git in the `Parentfolder`
@@ -122,22 +122,40 @@ Thus, open QGIS:
 
 ## Parcel filtering
 
-Launch the `filtering.py` script and all the following step will be done. They can be done separately but in the right order.
+The parcel filtering is performed in 4 steps which can be done separately **in the right order**, or directly by `filtering.py`
 
-*EXAMPLE* to launch all the filtering
+1. Select only woody moorlands, grasslands and meadows in OSO images and formalizing class 1 images (`1_osofilter.py`)
+2. Remove overlayer parcels (`2_overlayremoval.py`)
+3. Remove too small (< 1 hectare) and too big (> 100 hectare) parcels, crop them and save the final parcels' image (`3_sizeremoval.py`)
+4. Create the final groundtruth vector (`4_groundtruthvect.py`)
+
+`filtering.py` script:
+
+*Input*
+
+- `--class0` path to the unmowed parcel images
+- `--class1` path to the mowed parcel images
+
+*Output*
+
+- `parcels.tif` the image containing parcels localisation and numbers
+- `grt.npy` the groundtruth vector containing parcels labels
+
+*Example*
 
 <pre>
 python3 filtering.py --class0 path/to/mowing0.tif --class1 path/to/mowing1.tif
 </pre>
 
-1. Select only woody moorlands, grasslands and meadows in OSO images and formalizing class 1 images (`1_osofilter.py`)
-2. Remove overlayer parcels (`2_overlayremoval.py`)
-3. Remove too small (< 1 hectare) and too big (> 100 hectare) parcels, crop them and save the final parcels' image (`3_sizeremoval.py`)
-3. Create the final groundtruth vector (`4_groundtruthvect.py`)
-
 ## Date grid
 
-***TO BE DONE***
+To create the dategrid, launch the `dategrid.py` script. It is created by searching for a SENTINEL-1 - SENTINEL-2 correspondancy (according to their high revisit frequency, SENTINEL-1 images are selected by nearest-neighbours approximation)
+
+*EXAMPLE* to process all images (tiles, years) containing in the parentfolder
+
+<pre>
+python3 dategrid.py --folder path/to/parentfolder
+</pre>
 
 # 5. Dataset
 
