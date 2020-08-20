@@ -1,16 +1,15 @@
-# Mowing modelling
-Mowing modelling in Alpine's area from remote sensing images by machine learning algorithm
+# Mowing/Grazing detection
+Automatic detection of mowing and grazing from Sentinel images in the French Alps through deep learning approaches.
 
 # Process
-The following process specify how to collect data, treat them and predict mowing from my end of study project at Laboratoire d'écologie Alpines (Grenoble).
+The following process specify how to collect data, treat them and predict mowing from my end of study project at Laboratoire d'écologie Alpines (LECA) (Grenoble).
 
 1. Download preprocess S1 tiled and S2 corrected images from PEPS
 2. Organize downloaded images in the predefined folder architecture
 3. Compute vegetation indices from S2 images
-4. Compute the groundtruth from reference files
-5. Create the dataset from all remote sensing images and groundtruth data
-6. Launch the multimodal-temporal mowing predictor model learning
-7. Predict mowing from remote sensing images through the model
+4. Compute and filter the groundtruth and the dataset from reference files and Sentinel images
+5. Launch the multimodal-temporal mowing detector model learning
+
 
 # 1. Preprocessed images downloading
 
@@ -45,6 +44,7 @@ The following process specify how to collect data, treat them and predict mowing
 8. The process state can be checked in <img src="https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/jobs.png" alt="drawing" height="27"/>
 9. When the process is done, go to <img src="https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/results.png" alt="drawing" height="27"/> and download the products
 
+
 # 2. Folder architecture
 
 1. Save the downloaded products (images or folder of images) by the following folder architecture
@@ -65,6 +65,7 @@ parentfolder/tile/year/SENTINEL-2/SENTINEL2*/
 
 2. Move the `Scripts/` directory of this Git in the `Parentfolder`
 
+
 # 3. Vegetation index
 
 To compute the vegetation index images use the `vegindex.py` script, depending on the number of S2 images it may take a while (1 day for 2 years of images)
@@ -74,6 +75,7 @@ To compute the vegetation index images use the `vegindex.py` script, depending o
 <pre>
 python3 vegindex.py ../31TGK/2018/SENTINEL-2/* ../31TGK/2019/SENTINEL-2/*
 </pre>
+
 
 # 4. Groundtruth
 
@@ -120,33 +122,6 @@ Thus, open QGIS:
 
 <img src="https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/exportqgis0.png" alt="drawing" width="700"/>
 
-## Parcel filtering
-
-The parcel filtering is performed in 4 steps which can be done separately **in the right order**, or directly by `filtering.py`
-
-1. Select only woody moorlands, grasslands and meadows in OSO images and formalizing class 1 images (`1_osofilter.py`)
-2. Remove overlayer parcels (`2_overlayremoval.py`)
-3. Remove too small (< 1 hectare) and too big (> 100 hectare) parcels, crop them and save the final parcels' image (`3_sizeremoval.py`)
-4. Create the final groundtruth vector (`4_groundtruthvect.py`)
-
-`filtering.py` script:
-
-*Input*
-
-- `--class0` path to the unmowed parcel image
-- `--class1` path to the mowed parcel image
-
-*Output* [All in the script folder]
-
-- `parcels.tif` image containing parcels localisation and numbers
-- `grt.npy` groundtruth vector containing parcels labels
-
-*Example*
-
-<pre>
-python3 filtering.py --class0 path/to/mowing0.tif --class1 path/to/mowing1.tif
-</pre>
-
 ## Date grid
 
 The dategrid is created by searching for a SENTINEL-1 - SENTINEL-2 correspondancy (according to their high revisit frequency, SENTINEL-1 images are selected by nearest-neighbours approximation)
@@ -167,25 +142,39 @@ The dategrid is created by searching for a SENTINEL-1 - SENTINEL-2 correspondanc
 python3 dategrid.py --folder path/to/parentfolder
 </pre>
 
-# 5. Dataset
+## Parcel filtering and dataset computation
 
-The dataset creation is truly long (almost 1 week for 17 modes on 144 images, 2 years with a 5 days frequency)
+The parcel filtering and dataset creation is performed in 6 steps which can be done separately **in the right order**, or directly by `filtering.py`
 
-`dataset.py` script:
+1. Select only meadows (13), grasslands (18) and woody moorlands (19) in OSO images and formalizing class 1 images (`1_prefilter.py`)
+2. Remove overlayer parcels (`2_overlayremoval.py`)
+3. Remove too small (< 1 hectare) and too big (> 100 hectares) parcels, crop them and save the final parcels' image (`3_sizeremoval.py`)
+4. Compute the groundtruth vector (`4_groundtruthvect.py`)
+5. Compute the contextual dataset (`5_contextualdataset.py`)
+6. Compute the modal dataset (`6_modaldataset.py`), this step is truly long (almost 1 week for 4000 parcels with 17 modes on 144 images, 2 years with a 5 days frequency) it could be a good idea to do it separately
+
+`filtering_n_dataset.py` script:
 
 *Input*
 
-- `--` 
+- `--class0` path to the unmowed parcel image
+- `--class1` path to the mowed parcel image
+- `--altitude` path to the altitude map image
+- `--datesgrid` path to dates grid csv file
+- `--tiledir` path to the tile **directory** (e.g. 31TGK)
 
 *Output* [All in the script folder]
 
-- ``
+- `parcels.tif` image containing parcels localisation and numbers
+- `grt.npy` groundtruth vector containing parcels labels
 
 *Example*
 
 <pre>
-python3 dataset.py -- 
+python3 filtering_n_dataset.py --class0 path/to/mowing0.tif --class1 path/to/mowing1.tif --altitude path/to/alti.tif --datesgrid path/to/dategrid.csv --tiledir path/to/31TGK
 </pre>
+
+
 
 
 
