@@ -8,7 +8,7 @@ The following process specify how to collect data, treat them and predict mowing
 2. Organize downloaded images in the predefined folder architecture
 3. Compute vegetation indices from S2 images
 4. Compute and filter the groundtruth and the dataset from reference files and Sentinel images
-5. Launch the multimodal-temporal mowing detector model learning
+5. Launch the learning and testing of the multimodal-temporal detector
 
 
 # 1. Preprocessed images downloading
@@ -77,7 +77,7 @@ python3 vegindex.py ../31TGK/2018/SENTINEL-2/* ../31TGK/2019/SENTINEL-2/*
 </pre>
 
 
-# 4. Groundtruth
+# 4. Groundtruth and Dataset
 
 ## Reference data
 
