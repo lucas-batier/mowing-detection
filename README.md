@@ -174,8 +174,25 @@ The parcel filtering and dataset creation is performed in 6 steps which can be d
 python3 filtering_n_dataset.py --class0 path/to/mowing0.tif --class1 path/to/mowing1.tif --altitude path/to/alti.tif --datesgrid path/to/dategrid.csv --tiledir path/to/31TGK
 </pre>
 
+# 5. Learning and testing
 
+Launch the learning and the testing of the model by the `model.py` script:
 
+*Input*
+
+- `--mode` path to the modal dataset array
+- `--context` path to the contextual dataset array
+- `--labels` path to the groundtruht labels array
+
+*Output*
+
+- AUC results for each folds
+
+*Example*
+
+<pre>
+python3 model.py --mode path/to/mode.npy --context path/to/context.npy --labels path/to/labels.npy
+</pre>
 
 
 
