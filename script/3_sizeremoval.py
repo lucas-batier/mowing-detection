@@ -10,12 +10,14 @@ parser=argparse.ArgumentParser(
 parser.add_argument('-g','--groundtruth', help='Groundtruth image', required=True)
 args=parser.parse_args()
 
-
+# Open the groundtuth image
 GRT = imread(args.groundtruth)
 
+# Shrink each parcels by 3 pixels
 kernel = np.ones((3,3),np.uint8)
 GRT = cv2.dilate(GRT,kernel,iterations = 1)
 
+# Labeled image to identify parcels
 im_parcels = (GRT < 255).astype(np.uint8)
 N, im_parcels = cv2.connectedComponents(im_parcels)
 
@@ -23,6 +25,7 @@ print('Nb of parcels before removal: %d'%(N))
 
 print('Size removal')
 update_progress(0)
+# Remove too big or too small parcels
 for n in range(1, N + 1):
     t_start = time()
     
@@ -32,13 +35,14 @@ for n in range(1, N + 1):
 
     update_progress((n-1)/(N-0.9), (time()-t_start)*(N-n-1))
 
+# Re-Labeled image
 im_parcels = (GRT < 255).astype(np.uint8)
 N, im_parcels = cv2.connectedComponents(im_parcels)
 
-# Save parcel id
+# Save parcels labeled image
 imsave('/'.join(args.groundtruth.split('/')[:-1]) + '/parcels.tif', im_parcels)
 
-# Save groundtruth & parcels size
+# Save groundtruth image
 imsave(args.groundtruth, GRT)
 
 
