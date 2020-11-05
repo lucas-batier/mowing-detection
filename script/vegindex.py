@@ -11,7 +11,7 @@ parser=argparse.ArgumentParser(
 parser.add_argument('-f','--folders', nargs='+', help='List of folders to be processed', required=True)
 args=parser.parse_args()
 
-
+# NARI image computation from Green and Red edge bands
 def nari(G, R_E):
     np.seterr(divide='ignore', invalid='ignore') # Unset divide by 0 and inf-inf error
     NARI = (1/G - 1/R_E)/(1/G + 1/R_E) # Computation of the index
@@ -19,18 +19,21 @@ def nari(G, R_E):
     NARI = np.clip(NARI, NARI[NARI!=-np.inf].min(), NARI[NARI!=np.inf].max()) # Dealing with inf values
     return np.clip(NARI, -1., 1)
 
+# EVI image computation from Blue, Red and Near Infrared bands
 def evi(B, R, NIR, G=2.5, C1=6., C2=7.5, L=1.):
     np.seterr(divide='ignore', invalid='ignore')
     EVI = G*(NIR-R)/(NIR+C1*R-C2*B+L)
     EVI[np.isnan(EVI)] = 0
     return np.clip(EVI, -1., 1.)
 
+# NDVI image computation from Red and Near Infrared bands
 def ndvi(R, NIR):
     np.seterr(divide='ignore', invalid='ignore')
     NDVI = (NIR-R)/(NIR+R)
     NDVI[np.isnan(NDVI)] = 0
     return np.clip(NDVI, -1., 1)
 
+# SAVE image computation from Red and Near Infrared bands
 def savi(R, NIR, L=0.5):
     np.seterr(divide='ignore', invalid='ignore')
     SAVI = (1+L)*(NIR-R)/(NIR+R+L)
@@ -38,7 +41,7 @@ def savi(R, NIR, L=0.5):
     return np.clip(SAVI, -1., 1)
 
 
-
+# Computation of a whole folder of SENTINEL-2 images
 def folder(images_directory, res_type='FRE', im_format='tif'):
     '''
     Input: Images directory (location of SENTINEL-2 *FOLDER*)
@@ -48,17 +51,20 @@ def folder(images_directory, res_type='FRE', im_format='tif'):
     Output: Surprise (if it works well TT)
     '''
     
-    images_dir = glob(images_directory + '/*')
+    images_dir = glob(images_directory + '/*') # Get all image in the directory
 
     I = len(images_dir)
     for i, im_dir in enumerate(images_dir):
         
         update_progress(max(0,(i-4/5))/(I-0.9))
+        # Open the bands needed
         B3 = cv2.imread(glob(im_dir + '/*_' + res_type + '_' + 'B3.' + im_format)[0], -1).astype('float32')
         B5 = cv2.imread(glob(im_dir + '/*_' + res_type + '_' + 'B5.' + im_format)[0], -1).astype('float32')
         B5 = cv2.resize(B5, (10980,10980), 2, 2, cv2.INTER_CUBIC)
         
+        # Create the vegindex image
         im = Image.fromarray(nari(B3, B5).astype('float32'))
+        # Save the vegindex image
         im.save(glob(im_dir + '/*_FRE_B2.tif')[0][:-6] + 'NARI.' + im_format)
         im = None # release memory
         
@@ -95,6 +101,7 @@ def folder(images_directory, res_type='FRE', im_format='tif'):
 
     return True
 
+# Processing of each folder requested
 for images_directory in args.folders:
     print()
     print('Processing of ''%s'''%(images_directory))
