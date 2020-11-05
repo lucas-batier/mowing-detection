@@ -25,7 +25,7 @@ res_j = (2500,9500)
 df_dates = pd.read_csv(args.datesgrid, index_col='Unnamed: 0')
 df_dates = df_dates.drop('dates', axis=1)
 
-# Open the groundtruth vector and the parcel labels image
+# Open the groundtruth vector and the parcel ids image
 GRT = np.load(args.groundtruth)
 im_parcels = imread(args.parcels)
 
