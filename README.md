@@ -2,7 +2,8 @@
 Automatic detection of mowing and grazing from Sentinel images in the French Alps through deep learning approaches.
 
 # Process
-The following process specify how to collect data, treat them and predict mowing from my end of study project at Laboratoire d'écologie Alpines (LECA) (Grenoble).
+The following process specify how to collect data, treat them and predict mowing from my end of study project at Laboratoire d'écologie Alpines (LECA) (Grenoble). This process is created for computer scientist or people who, at least, know how to use python3 and install needed packages with pip.
+
 
 1. Download preprocess S1 tiled and S2 corrected images from PEPS
 2. Organize downloaded images in the predefined folder architecture
@@ -16,7 +17,7 @@ The following process specify how to collect data, treat them and predict mowing
 ## Criteria selection
 1. Go on the [PEPS Explore tab](https://peps.cnes.fr/rocket/#/search?maxRecords=50)
 ### SENTINEL-1
-2. Select the region of interest by drawing on the map, then select the criteria in the item list on the left (example below for Écrin National Park region of interest on year 2018-2019)
+2. Select the region of interest by drawing on the map, then select the criteria in the item list on the left (example below for Écrin National Park region of interest on years 2018-2019)
 
 ![S1 criteria selection](https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/S1select.png)
 
@@ -25,7 +26,7 @@ The following process specify how to collect data, treat them and predict mowing
 ![S1 list selection](https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/S1list.png)
 
 ### SENTINEL-2
-2. Select the region of interest by tile in the item list on the left, then select the criteria in the item list on the left (example below for tile 31TGK on year 2018-2019)
+2. Select the region of interest by tile in the item list on the left, then select the criteria in the item list on the left (example below for tile 31TGK on years 2018-2019)
 
 ![S2 criteria selection](https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/S2select.png)
 
@@ -47,28 +48,32 @@ The following process specify how to collect data, treat them and predict mowing
 
 # 2. Folder architecture
 
+The folder architecture is essential for the further processing such as the vegetation index.
+
 1. Save the downloaded products (images or folder of images) by the following folder architecture
 
 <pre>
 parentfolder/tile/year/SENTINEL-X/products
 </pre>
 
-*SENTINEL-1*
+*Example for SENTINEL-1, tile 31TGK and year 2018*
 <pre>
-parentfolder/tile/year/SENTINEL-1/s1*.tiff
+parentfolder/31TGK/2018/SENTINEL-1/s1*.tiff
 </pre>
 
-*SENTINEL-2*
+*Example for SENTINEL-2, tile 31TGK and year 2019*
 <pre>
-parentfolder/tile/year/SENTINEL-2/SENTINEL2*/
+parentfolder/31TGK/2019/SENTINEL-2/SENTINEL2*/
 </pre>
+
+NB: The SENTINEL-2 products are folders while SENTINEL-1's are images)
 
 2. Move the `Scripts/` directory of this Git in the `Parentfolder`
 
 
 # 3. Vegetation index
 
-To compute the vegetation index images use the `vegindex.py` script, depending on the number of S2 images it may take a while (1 day for 2 years of images)
+To compute the vegetation index images use the `vegindex.py` script. Depending on the number of S2 images it may take a while (1 day for 2 years of images)
 
 *EXAMPLE* for tile 31TGK on year 2018 and 2019
 
