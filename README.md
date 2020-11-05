@@ -199,6 +199,8 @@ Launch the learning and the testing of the model by the `model.py` script:
 python3 model.py --mode path/to/mode.npy --context path/to/context.npy --labels path/to/labels.npy
 </pre>
 
+NB: This model was made in a truly coarse manner (in less than 2 months), do not rely a lot on it
+
 
 
 
