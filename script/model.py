@@ -19,22 +19,27 @@ parser.add_argument('-c','--context', help='Contextual dataset path', required=T
 parser.add_argument('-l','--labels', help='Labels vector path', required=True)
 args=parser.parse_args()
 
+# Open multi-modal dataset, context dataset and labels
 mode = np.load(args.mode)
 context = np.load(args.context)
 labels = np.load(args.labels)
 
+# Change a bit the label format according to the neural network needs
 labels = labels.astype('uint8')
 labels = np.reshape(labels, (labels.shape[0], 1, 1))
 
+# Splitting in a 20% Test and 80% training dataset
 mode_tr, mode_te, context_tr, context_te, labels_tr, labels_te = train_test_split(mode, context, labels, test_size=0.2)
 
 print()
 print('%.2f %% of mowed parcels'%(np.sum(labels)/len(labels)*100))
 print()
 
+# Normalization layer
 def layers_Normalization(inputs):
     return tf.clip_by_value(tf.divide(tf.subtract(inputs, tf.reduce_min(inputs)), tf.subtract(tf.reduce_max(inputs), tf.reduce_min(inputs))), -1e12, 1e12) # Normalization
 
+# Neural network model with context
 def model_creation_context():
     keras.backend.clear_session()
     
@@ -49,7 +54,7 @@ def model_creation_context():
     cont_input = keras.Input(shape=(context.shape[1], context.shape[2]))
     cont_encoded = cont_input
 
-    # Concatenate
+    # Concatenation
     encoded = layers.concatenate([mode_encoded, cont_encoded])
     #encoded = mode_encoded
     
@@ -57,11 +62,11 @@ def model_creation_context():
     rnn = layers_Normalization(encoded)
     rnn = layers.GRU(rnn.shape[2], return_sequences=True)(rnn)
 
-    # MLP predicting
+    # MLP feature prediction
     decoded = layers.Dense(1)(rnn)
     decoded = layers.Permute((2, 1))(decoded)
 
-    # MLP time predicting
+    # MLP time prediction
     outputs = layers.TimeDistributed(layers.Dense(5))(decoded)
     outputs = layers.Activation('relu')(outputs)
     outputs = layers.Dropout(0.2)(outputs)
@@ -75,6 +80,7 @@ def model_creation_context():
     
     return model
 
+# Neural network model without context
 def model_creation_nocontext():
     keras.backend.clear_session()
     
@@ -89,7 +95,7 @@ def model_creation_nocontext():
     cont_input = keras.Input(shape=(context.shape[1], context.shape[2]))
     cont_encoded = cont_input
 
-    # Concatenate
+    # Concatenation
     encoded = layers.concatenate([mode_encoded, cont_encoded])
     #encoded = mode_encoded
     
@@ -97,11 +103,11 @@ def model_creation_nocontext():
     rnn = layers_Normalization(encoded)
     rnn = layers.GRU(rnn.shape[2], return_sequences=True)(rnn)
 
-    # MLP predicting
+    # MLP feature prediction
     decoded = layers.Dense(1)(rnn)
     decoded = layers.Permute((2, 1))(decoded)
 
-    # MLP time predicting
+    # MLP time prediction
     outputs = layers.TimeDistributed(layers.Dense(5))(decoded)
     outputs = layers.Activation('relu')(outputs)
     outputs = layers.Dropout(0.2)(outputs)
@@ -121,6 +127,7 @@ print()
 
 history = []
 auc = []
+# Stratified K-fold validation to avoid imbalance dataset errors
 K = 5
 kf = StratifiedKFold(n_splits=K)
 k = 0
@@ -144,6 +151,7 @@ print()
 print('Testing')
 print()
 
+# Printing score of each fold
 k = 0
 for score in auc:
     k += 1
