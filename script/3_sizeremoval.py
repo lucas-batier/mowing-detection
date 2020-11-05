@@ -13,7 +13,7 @@ args=parser.parse_args()
 # Open the groundtuth image
 GRT = imread(args.groundtruth)
 
-# Shrink each parcels by 3 pixels
+# Crop each parcels by 3 pixels
 kernel = np.ones((3,3),np.uint8)
 GRT = cv2.dilate(GRT,kernel,iterations = 1)
 
