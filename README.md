@@ -73,7 +73,7 @@ NB: The SENTINEL-2 products are folders while SENTINEL-1's are images)
 
 # 3 Vegetation index
 
-To compute the vegetation index images use the `vegindex.py` script. Depending on the number of S2 images it may take a while (1 day for 2 years of images)
+To compute the vegetation index images use the `vegindex.py` script. Depending on the number of S2 images it may take a while (1 day for 2 years of images). Moreover it takes a lot of memory (openning and writing of multiple bands in the same time), therefore we put many 'memory release' code but with a processor with less than 16GB of RAM it will crash anyway for this resolution (10980 x 10980).
 
 *EXAMPLE* for tile 31TGK on year 2018 and 2019
 
