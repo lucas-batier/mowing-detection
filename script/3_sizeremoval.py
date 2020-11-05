@@ -17,7 +17,7 @@ GRT = imread(args.groundtruth)
 kernel = np.ones((3,3),np.uint8)
 GRT = cv2.dilate(GRT,kernel,iterations = 1)
 
-# Labeled image to identify parcels
+# Id image to identify parcels
 im_parcels = (GRT < 255).astype(np.uint8)
 N, im_parcels = cv2.connectedComponents(im_parcels)
 
@@ -35,11 +35,11 @@ for n in range(1, N + 1):
 
     update_progress((n-1)/(N-0.9), (time()-t_start)*(N-n-1))
 
-# Re-Labeled image
+# Re-Identified image
 im_parcels = (GRT < 255).astype(np.uint8)
 N, im_parcels = cv2.connectedComponents(im_parcels)
 
-# Save parcels labeled image
+# Save parcels id image
 imsave('/'.join(args.groundtruth.split('/')[:-1]) + '/parcels.tif', im_parcels)
 
 # Save groundtruth image
