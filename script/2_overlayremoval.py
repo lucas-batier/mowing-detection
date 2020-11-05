@@ -23,12 +23,12 @@ GRT1 = imread(args.class1)
 GRT0 = GRT0[res_i[0]:res_i[1],res_j[0]:res_j[1]]
 GRT1 = GRT1[res_i[0]:res_i[1],res_j[0]:res_j[1]]
 
-# Labelling
-# Each not mowed parcels will get a unique value in a labeled image
+# Pixel identification
+# Each not mowed parcels will get a unique value in an id image
 im_parcels = (GRT0 < 255).astype(np.uint8)
 N0, im_parcels0 = cv2.connectedComponents(im_parcels)
 
-# Each mowed parcels will get a unique value in a labeled image
+# Each mowed parcels will get a unique value in an id image
 im_parcels = (GRT1 < 255).astype(np.uint8)
 N1, im_parcels1 = cv2.connectedComponents(im_parcels)
 
@@ -48,7 +48,7 @@ for n in range(1, N0):
     update_progress((n-1)/(N0-0.9), (time()-t_start)*(N0-n-1))
 
 ####################
-## Labelling
+## Pixel identification
 #im_parcels = (GRT0 < 255).astype(np.uint8)
 #N0, im_parcels0 = cv2.connectedComponents(im_parcels)
 
