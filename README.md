@@ -12,7 +12,7 @@ The following process specify how to collect data, treat them and predict mowing
 5. Launch the learning and testing of the multimodal-temporal detector
 
 
-# 1. Preprocessed images downloading
+# 1 Preprocessed images downloading
 
 ## Criteria selection
 1. Go on the [PEPS Explore tab](https://peps.cnes.fr/rocket/#/search?maxRecords=50)
@@ -46,7 +46,7 @@ The following process specify how to collect data, treat them and predict mowing
 9. When the process is done, go to <img src="https://github.com/lucasbat20/Grazing-modelling/blob/master/Images/results.png" alt="drawing" height="27"/> and download the products
 
 
-# 2. Folder architecture
+# 2 Folder architecture
 
 The folder architecture is essential for the further processing such as the vegetation index.
 
@@ -71,7 +71,7 @@ NB: The SENTINEL-2 products are folders while SENTINEL-1's are images)
 2. Move the `Scripts/` directory of this Git in the `Parentfolder`
 
 
-# 3. Vegetation index
+# 3 Vegetation index
 
 To compute the vegetation index images use the `vegindex.py` script. Depending on the number of S2 images it may take a while (1 day for 2 years of images)
 
@@ -82,7 +82,7 @@ python3 vegindex.py ../31TGK/2018/SENTINEL-2/* ../31TGK/2019/SENTINEL-2/*
 </pre>
 
 
-# 4. Groundtruth and Dataset
+# 4 Groundtruth and Dataset
 
 ## Reference data
 
@@ -149,13 +149,13 @@ python3 dategrid.py --folder path/to/parentfolder
 
 ## Parcel filtering and dataset computation
 
-The parcel filtering and dataset creation is performed in 6 steps which can be done separately **in the right order**, or directly by `filtering.py`
+The parcel filtering and dataset creation is performed in 6 steps which can be done separately **in the right order**, or directly by `filtering_n_dataset.py`
 
-1. Select only meadows (13), grasslands (18) and woody moorlands (19) in OSO images and formalizing class 1 images (`1_prefilter.py`)
-2. Remove overlayer parcels (`2_overlayremoval.py`)
+1. Select only meadows, grasslands and woody moorlands in OSO images and formalizing class 1 images (`1_prefilter.py`)
+2. Remove overlayer parcels (`2_overlayremoval.py`) NB: the images are also resized to decrease the computation time of next process
 3. Remove too small (< 1 hectare) and too big (> 100 hectares) parcels, crop them and save the final parcels' image (`3_sizeremoval.py`)
 4. Compute the groundtruth vector (`4_groundtruthvect.py`)
-5. Compute the contextual dataset (`5_contextualdataset.py`)
+5. Compute the contextual dataset (`5_contextualdataset.py`), for now only altitude
 6. Compute the modal dataset (`6_modaldataset.py`), this step is truly long (almost 1 week for 4000 parcels with 17 modes on 144 images, 2 years with a 5 days frequency) it could be a good idea to do it separately
 
 `filtering_n_dataset.py` script:
@@ -166,12 +166,12 @@ The parcel filtering and dataset creation is performed in 6 steps which can be d
 - `--class1` path to the mowed parcel image
 - `--altitude` path to the altitude map image
 - `--datesgrid` path to dates grid csv file
-- `--tiledir` path to the tile **directory** (e.g. 31TGK)
+- `--tiledir` path to the tile **directory** (e.g. 31TGK shown in section [2 Folder architecture](#2-folder-architecture))
 
 *Output* [All in the script folder]
 
-- `parcels.tif` image containing parcels localisation and numbers
-- `grt.npy` groundtruth vector containing parcels labels
+- `parcels.tif` image containing parcels localisation and labels (from 1 to the number of parcels)
+- `grt.npy` groundtruth vector containing parcels groudtruth values (1 for mowed, 0 for unmowed)
 
 *Example*
 
@@ -179,7 +179,7 @@ The parcel filtering and dataset creation is performed in 6 steps which can be d
 python3 filtering_n_dataset.py --class0 path/to/mowing0.tif --class1 path/to/mowing1.tif --altitude path/to/alti.tif --datesgrid path/to/dategrid.csv --tiledir path/to/31TGK
 </pre>
 
-# 5. Learning and testing
+# 5 Learning and testing
 
 Launch the learning and the testing of the model by the `model.py` script:
 
@@ -187,7 +187,7 @@ Launch the learning and the testing of the model by the `model.py` script:
 
 - `--mode` path to the modal dataset array
 - `--context` path to the contextual dataset array
-- `--labels` path to the groundtruht labels array
+- `--labels` path to the groundtruth labels array
 
 *Output*
 
