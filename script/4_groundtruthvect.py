@@ -10,7 +10,7 @@ parser.add_argument('-g','--groundtruth', help='Groundtruth image', required=Tru
 parser.add_argument('-p','--parcels', help='Parcel image', required=True)
 args=parser.parse_args()
 
-# Open parcels label and value
+# Open parcels labels and ids
 GRT = imread(args.groundtruth)
 im_parcels = imread(args.parcels)
 
