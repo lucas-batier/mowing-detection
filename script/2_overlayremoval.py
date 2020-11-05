@@ -24,9 +24,11 @@ GRT0 = GRT0[res_i[0]:res_i[1],res_j[0]:res_j[1]]
 GRT1 = GRT1[res_i[0]:res_i[1],res_j[0]:res_j[1]]
 
 # Labelling
+# Each not mowed parcels will get a unique value in a labeled image
 im_parcels = (GRT0 < 255).astype(np.uint8)
 N0, im_parcels0 = cv2.connectedComponents(im_parcels)
 
+# Each mowed parcels will get a unique value in a labeled image
 im_parcels = (GRT1 < 255).astype(np.uint8)
 N1, im_parcels1 = cv2.connectedComponents(im_parcels)
 
@@ -34,6 +36,7 @@ N1, im_parcels1 = cv2.connectedComponents(im_parcels)
 print('Overlay removal')
 update_progress(0)
 
+# Removing overlaying unmowed parcels
 nbrem = 0
 for n in range(1, N0):
     t_start = time()
@@ -59,9 +62,9 @@ for n in range(1, N0):
 #imsave(args.class0.split('/')[:-1] + '/parcels.tif', im_parcels)
 ###################
 
-# Merge groundtruth
+# Merge groundtruth mowed and unmowed images
 GRT = np.minimum(GRT0, GRT1)
-# Save groundtruth
+# Save the final groundtruth image
 imsave('/'.join(args.class0.split('/')[:-1]) + '/groundtruth.tif', GRT)
 
 update_progress(1)
