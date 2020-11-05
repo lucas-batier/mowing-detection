@@ -17,12 +17,12 @@ update_progress(0)
 res_i = (0,7000)
 res_j = (2500,9500)
 
-# Open the altitude image and the parcel label image
+# Open the altitude image and the parcel id image
 im_alti = imread(args.altitude)
 im_parcels = imread(args.parcels)
 #EXEMPLE-im_rain = imread(args.rain)
 
-# Crop the altitude image to match the parcel label one
+# Crop the altitude image to match the parcel id one
 im_alti = im_alti[res_i[0]:res_i[1],res_j[0]:res_j[1]]
 #EXEMPLE-im_rain = im_rain[res_i[0]:res_i[1],res_j[0]:res_j[1]]
 
